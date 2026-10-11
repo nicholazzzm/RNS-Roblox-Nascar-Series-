@@ -910,3 +910,569 @@
     </script>
 </body>
 </html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RNCS | Roblox NASCAR Championship Series</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        nascar: {
+                            yellow: '#FFCC00',
+                            red: '#E10600',
+                            blue: '#00529B',
+                            dark: '#0B0E14',
+                            card: '#151922',
+                            cardHover: '#1E2430',
+                            border: '#2A3241'
+                        }
+                    },
+                    fontFamily: {
+                        orbitron: ['Orbitron', 'sans-serif'],
+                        rajdhani: ['Rajdhani', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0B0E14;
+            color: #F3F4F6;
+            font-family: 'Rajdhani', sans-serif;
+            overflow-x: hidden;
+        }
+        .font-racing {
+            font-family: 'Orbitron', sans-serif;
+        }
+        .nascar-stripe {
+            background: linear-gradient(90deg, #E10600 0%, #FFCC00 50%, #00529B 100%);
+        }
+        .skew-tag {
+            transform: skewX(-12deg);
+        }
+        .skew-tag-inside {
+            transform: skewX(12deg);
+        }
+        .glass-panel {
+            background: rgba(21, 25, 34, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #0B0E14;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #2A3241;
+            border-radius: 3px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #FFCC00;
+        }
+    </style>
+</head>
+<body class="custom-scrollbar">
+
+    <!-- TOP ANNOUNCEMENT STRIPE -->
+    <div class="nascar-stripe h-1.5 w-full fixed top-0 z-50"></div>
+
+    <!-- NAVBAR -->
+    <nav class="fixed top-1.5 left-0 right-0 z-40 glass-panel border-b border-nascar-border">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- LOGO -->
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('lineups')">
+                    <div class="w-10 h-10 bg-nascar-yellow skew-tag flex items-center justify-center font-racing font-black text-black text-xl shadow-lg shadow-nascar-yellow/20">
+                        <span class="skew-tag-inside">N</span>
+                    </div>
+                    <div>
+                        <div class="font-racing font-black text-xl tracking-wider text-white leading-none">RNCS</div>
+                        <div class="text-xs font-semibold text-nascar-yellow tracking-widest uppercase">Roblox Cup Series</div>
+                    </div>
+                </div>
+
+                <!-- DESKTOP NAV LINKS -->
+                <div class="hidden lg:flex items-center space-x-1 font-racing text-sm font-semibold tracking-wider">
+                    <button onclick="switchTab('lineups')" id="nav-lineups" class="nav-btn px-4 py-2 rounded-lg text-white bg-white/10 transition">
+                        <i class="fa-solid fa-users text-nascar-yellow mr-2"></i>Lineups
+                    </button>
+                    <button onclick="switchTab('standings')" id="nav-standings" class="nav-btn px-4 py-2 rounded-lg text-gray-300 hover:text-white hover:bg-white/5 transition">
+                        <i class="fa-solid fa-trophy text-nascar-yellow mr-2"></i>Standings
+                    </button>
+                    <button onclick="switchTab('results')" id="nav-results" class="nav-btn px-4 py-2 rounded-lg text-gray-300 hover:text-white hover:bg-white/5 transition">
+                        <i class="fa-solid fa-flag-checkered text-nascar-yellow mr-2"></i>Results
+                    </button>
+                    <button onclick="switchTab('schedule')" id="nav-schedule" class="nav-btn px-4 py-2 rounded-lg text-gray-300 hover:text-white hover:bg-white/5 transition">
+                        <i class="fa-solid fa-calendar-days text-nascar-yellow mr-2"></i>Calendar
+                    </button>
+                </div>
+
+                <!-- DISCORD BUTTON -->
+                <div class="hidden sm:flex items-center space-x-4">
+                    <a href="https://discord.gg/your-discord-link" target="_blank" class="skew-tag bg-[#5865F2] hover:bg-[#4752C4] text-white font-racing font-bold px-5 py-2.5 rounded text-sm transition flex items-center space-x-2 shadow-lg shadow-indigo-500/20">
+                        <span class="skew-tag-inside flex items-center space-x-2">
+                            <i class="fa-brands fa-discord text-lg"></i>
+                            <span>JOIN DISCORD</span>
+                        </span>
+                    </a>
+                </div>
+
+                <!-- MOBILE MENU BUTTON -->
+                <div class="lg:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="text-gray-300 hover:text-white text-2xl focus:outline-none">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MOBILE NAV DROPDOWN -->
+        <div id="mobile-menu" class="hidden lg:hidden glass-panel border-t border-nascar-border px-4 pt-2 pb-4 space-y-2 font-racing">
+            <button onclick="switchTab('lineups'); toggleMobileMenu();" class="w-full text-left py-2.5 px-3 rounded hover:bg-white/5 text-gray-200"><i class="fa-solid fa-users text-nascar-yellow mr-3"></i>Team Lineups</button>
+            <button onclick="switchTab('standings'); toggleMobileMenu();" class="w-full text-left py-2.5 px-3 rounded hover:bg-white/5 text-gray-200"><i class="fa-solid fa-trophy text-nascar-yellow mr-3"></i>Standings (WDC / WCC)</button>
+            <button onclick="switchTab('results'); toggleMobileMenu();" class="w-full text-left py-2.5 px-3 rounded hover:bg-white/5 text-gray-200"><i class="fa-solid fa-flag-checkered text-nascar-yellow mr-3"></i>Race Results</button>
+            <button onclick="switchTab('schedule'); toggleMobileMenu();" class="w-full text-left py-2.5 px-3 rounded hover:bg-white/5 text-gray-200"><i class="fa-solid fa-calendar-days text-nascar-yellow mr-3"></i>Season Calendar</button>
+            <a href="https://discord.gg/your-discord-link" target="_blank" class="block w-full text-center mt-3 bg-[#5865F2] text-white py-2.5 rounded font-bold">
+                <i class="fa-brands fa-discord mr-2"></i>JOIN DISCORD
+            </a>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <header class="relative pt-32 pb-16 overflow-hidden border-b border-nascar-border bg-gradient-to-b from-nascar-dark via-nascar-card to-nascar-dark">
+        <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#FFCC00_1px,transparent_1px)] [background-size:16px_16px]"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+            <div class="inline-flex items-center space-x-2 bg-nascar-yellow/10 border border-nascar-yellow/30 px-4 py-1.5 rounded-full text-nascar-yellow text-xs sm:text-sm font-racing uppercase tracking-widest mb-6">
+                <span class="w-2 h-2 rounded-full bg-nascar-yellow animate-ping"></span>
+                <span>Season 2026 Active Official Championship</span>
+            </div>
+            <h1 class="font-racing font-black text-4xl sm:text-6xl lg:text-7xl tracking-wider text-white uppercase mb-4 leading-tight">
+                ROBLOX <span class="text-transparent bg-clip-text bg-gradient-to-r from-nascar-yellow via-red-500 to-nascar-blue">NASCAR</span> LEAGUE
+            </h1>
+            <p class="text-gray-400 max-w-2xl mx-auto text-base sm:text-lg mb-8 font-medium">
+                Official Roblox NASCAR Cup Series rosters, team principals, driver standings, race results, and schedule.
+            </p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <button onclick="switchTab('lineups')" class="skew-tag bg-nascar-yellow hover:bg-yellow-400 text-black font-racing font-bold px-8 py-3.5 rounded text-sm transition shadow-lg shadow-nascar-yellow/20">
+                    <span class="skew-tag-inside flex items-center space-x-2">
+                        <i class="fa-solid fa-users"></i>
+                        <span>EXPLORE TEAM LINEUPS</span>
+                    </span>
+                </button>
+                <a href="https://discord.gg/your-discord-link" target="_blank" class="skew-tag bg-nascar-card hover:bg-nascar-cardHover border border-nascar-border text-white font-racing font-bold px-8 py-3.5 rounded text-sm transition">
+                    <span class="skew-tag-inside flex items-center space-x-2">
+                        <i class="fa-brands fa-discord text-indigo-400"></i>
+                        <span>JOIN DISCORD SERVER</span>
+                    </span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+        <!-- ========================================== -->
+        <!-- TAB 1: TEAM LINEUPS SECTION -->
+        <!-- ========================================== -->
+        <section id="sec-lineups" class="tab-content">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4 border-b border-nascar-border pb-6">
+                <div>
+                    <div class="text-nascar-yellow font-racing text-xs uppercase tracking-widest font-semibold mb-1">Official Team Roster</div>
+                    <h2 class="font-racing font-black text-3xl sm:text-4xl text-white uppercase">2026 TEAM LINEUPS</h2>
+                </div>
+                <!-- Manufacturers Filter -->
+                <div class="flex flex-wrap gap-2 font-racing text-xs">
+                    <button onclick="filterLineups('all', this)" class="lineup-filter px-4 py-2 rounded-lg bg-nascar-yellow text-black font-bold">ALL</button>
+                    <button onclick="filterLineups('Chevrolet', this)" class="lineup-filter px-4 py-2 rounded-lg bg-nascar-card border border-nascar-border text-gray-300 hover:text-white">CHEVROLET</button>
+                    <button onclick="filterLineups('Ford', this)" class="lineup-filter px-4 py-2 rounded-lg bg-nascar-card border border-nascar-border text-gray-300 hover:text-white">FORD</button>
+                    <button onclick="filterLineups('Toyota', this)" class="lineup-filter px-4 py-2 rounded-lg bg-nascar-card border border-nascar-border text-gray-300 hover:text-white">TOYOTA</button>
+                </div>
+            </div>
+
+            <!-- TEAMS GRID -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="lineups-container">
+                <!-- Populated dynamically by JS below -->
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- TAB 2: STANDINGS (WDC & WCC) -->
+        <!-- ========================================== -->
+        <section id="sec-standings" class="tab-content hidden">
+            <div class="border-b border-nascar-border pb-6 mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
+                <div>
+                    <div class="text-nascar-yellow font-racing text-xs uppercase tracking-widest font-semibold mb-1">Championship Points</div>
+                    <h2 class="font-racing font-black text-3xl sm:text-4xl text-white uppercase">SEASON STANDINGS</h2>
+                </div>
+                <!-- WDC / WCC Toggle -->
+                <div class="flex bg-nascar-card p-1 rounded-xl border border-nascar-border font-racing text-sm">
+                    <button onclick="toggleStandings('wdc')" id="tab-btn-wdc" class="px-6 py-2 rounded-lg bg-nascar-yellow text-black font-bold transition">WDC (Drivers)</button>
+                    <button onclick="toggleStandings('wcc')" id="tab-btn-wcc" class="px-6 py-2 rounded-lg text-gray-400 hover:text-white transition">WCC (Teams)</button>
+                </div>
+            </div>
+
+            <!-- WDC TABLE -->
+            <div id="standings-wdc" class="glass-panel rounded-2xl overflow-hidden border border-nascar-border">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead class="bg-nascar-card text-gray-400 font-racing text-xs uppercase border-b border-nascar-border">
+                            <tr>
+                                <th class="py-4 px-6">Pos</th>
+                                <th class="py-4 px-6">Driver</th>
+                                <th class="py-4 px-6">Roblox Handle</th>
+                                <th class="py-4 px-6">Team</th>
+                                <th class="py-4 px-6 text-center">Wins</th>
+                                <th class="py-4 px-6 text-center">Podiums</th>
+                                <th class="py-4 px-6 text-right">Points</th>
+                            </tr>
+                        </thead>
+                        <tbody id="wdc-table-body" class="divide-y divide-nascar-border/50 text-sm">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- WCC TABLE -->
+            <div id="standings-wcc" class="glass-panel rounded-2xl overflow-hidden border border-nascar-border hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead class="bg-nascar-card text-gray-400 font-racing text-xs uppercase border-b border-nascar-border">
+                            <tr>
+                                <th class="py-4 px-6">Pos</th>
+                                <th class="py-4 px-6">Team Name</th>
+                                <th class="py-4 px-6">Manufacturer</th>
+                                <th class="py-4 px-6 text-center">Wins</th>
+                                <th class="py-4 px-6 text-right">Points</th>
+                            </tr>
+                        </thead>
+                        <tbody id="wcc-table-body" class="divide-y divide-nascar-border/50 text-sm">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- TAB 3: RACE RESULTS -->
+        <!-- ========================================== -->
+        <section id="sec-results" class="tab-content hidden">
+            <div class="border-b border-nascar-border pb-6 mb-8">
+                <div class="text-nascar-yellow font-racing text-xs uppercase tracking-widest font-semibold mb-1">Post-Race Classification</div>
+                <h2 class="font-racing font-black text-3xl sm:text-4xl text-white uppercase">RACE RESULTS</h2>
+            </div>
+
+            <div class="space-y-6" id="results-container">
+                <!-- Populated by JS -->
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- TAB 4: CALENDAR / SCHEDULE -->
+        <!-- ========================================== -->
+        <section id="sec-schedule" class="tab-content hidden">
+            <div class="border-b border-nascar-border pb-6 mb-8">
+                <div class="text-nascar-yellow font-racing text-xs uppercase tracking-widest font-semibold mb-1">Official Event Schedule</div>
+                <h2 class="font-racing font-black text-3xl sm:text-4xl text-white uppercase">SEASON CALENDAR</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="schedule-container">
+                <!-- Populated by JS -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-nascar-border bg-nascar-card py-10 mt-16 text-center text-gray-500 text-sm">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex items-center justify-center space-x-2 font-racing font-black text-lg text-white mb-3">
+                <span class="text-nascar-yellow">RNCS</span>
+                <span>ROBLOX NASCAR CHAMPIONSHIP</span>
+            </div>
+            <p class="text-xs text-gray-500 mb-4">Not affiliated with or endorsed by NASCAR or Roblox Corporation.</p>
+            <div class="flex justify-center space-x-6 text-xl text-gray-400">
+                <a href="https://discord.gg/your-discord-link" target="_blank" class="hover:text-nascar-yellow transition"><i class="fa-brands fa-discord"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- DATA & CONTROLLER -->
+    <script>
+        // EDIT YOUR LEAGUE DATA HERE DIRECTLY!
+        const leagueData = {
+            teams: [
+                {
+                    name: "Hendrick Motorsports",
+                    manufacturer: "Chevrolet",
+                    principal: "dalt_sean",
+                    color: "border-blue-500",
+                    badgeColor: "bg-blue-600",
+                    drivers: [
+                        { name: "Sean", handle: "dalt_sean", number: "#9", status: "Primary" },
+                        { name: "Dave", handle: "DBBRONZE248", number: "#24", status: "Primary" },
+                        { name: "Kyle", handle: "kyle_racer", number: "#5", status: "Reserve" }
+                    ]
+                },
+                {
+                    name: "Joe Gibbs Racing",
+                    manufacturer: "Toyota",
+                    principal: "loll_top04",
+                    color: "border-orange-500",
+                    badgeColor: "bg-orange-600",
+                    drivers: [
+                        { name: "Jimmy", handle: "loll_top04", number: "#11", status: "Primary" },
+                        { name: "Alloy", handle: "stephan7391", number: "#19", status: "Primary" }
+                    ]
+                },
+                {
+                    name: "Team Penske",
+                    manufacturer: "Ford",
+                    principal: "ineedsnaks",
+                    color: "border-red-600",
+                    badgeColor: "bg-red-600",
+                    drivers: [
+                        { name: "Elijah", handle: "ineedsnaks", number: "#22", status: "Primary" },
+                        { name: "Speedy", handle: "speedy_roblox", number: "#12", status: "Reserve" }
+                    ]
+                }
+            ],
+
+            wdc: [
+                { pos: 1, driver: "Sean", handle: "dalt_sean", team: "Hendrick Motorsports", wins: 2, podiums: 4, points: 185 },
+                { pos: 2, driver: "Jimmy", handle: "loll_top04", team: "Joe Gibbs Racing", wins: 1, podiums: 3, points: 162 },
+                { pos: 3, driver: "Alloy", handle: "stephan7391", team: "Joe Gibbs Racing", wins: 1, podiums: 2, points: 148 },
+                { pos: 4, driver: "Elijah", handle: "ineedsnaks", team: "Team Penske", wins: 0, podiums: 2, points: 120 },
+                { pos: 5, driver: "Dave", handle: "DBBRONZE248", team: "Hendrick Motorsports", wins: 0, podiums: 1, points: 95 }
+            ],
+
+            wcc: [
+                { pos: 1, team: "Joe Gibbs Racing", manufacturer: "Toyota", wins: 2, points: 310 },
+                { pos: 2, team: "Hendrick Motorsports", manufacturer: "Chevrolet", wins: 2, points: 280 },
+                { pos: 3, team: "Team Penske", manufacturer: "Ford", wins: 0, points: 120 }
+            ],
+
+            results: [
+                {
+                    race: "Round 4 - Daytona 500",
+                    track: "Daytona International Speedway",
+                    date: "September 28, 2026",
+                    podium: [
+                        { pos: "P1", driver: "Sean", handle: "dalt_sean", team: "Hendrick Motorsports", time: "WINNER" },
+                        { pos: "P2", driver: "Jimmy", handle: "loll_top04", team: "Joe Gibbs Racing", time: "+0.142s" },
+                        { pos: "P3", driver: "Alloy", handle: "stephan7391", team: "Joe Gibbs Racing", time: "+0.890s" }
+                    ]
+                },
+                {
+                    race: "Round 3 - Talladega Superspeedway",
+                    track: "Talladega Superspeedway",
+                    date: "September 14, 2026",
+                    podium: [
+                        { pos: "P1", driver: "Alloy", handle: "stephan7391", team: "Joe Gibbs Racing", time: "WINNER" },
+                        { pos: "P2", driver: "Sean", handle: "dalt_sean", team: "Hendrick Motorsports", time: "+0.310s" },
+                        { pos: "P3", driver: "Elijah", handle: "ineedsnaks", team: "Team Penske", time: "+1.025s" }
+                    ]
+                }
+            ],
+
+            schedule: [
+                { round: "ROUND 5", title: "Bristol Night Race", track: "Bristol Motor Speedway", date: "OCT 18, 2026", time: "8:00 PM EST", status: "UPCOMING" },
+                { round: "ROUND 6", title: "Charlotte Roval 400", track: "Charlotte Motor Speedway", date: "OCT 25, 2026", time: "8:00 PM EST", status: "UPCOMING" },
+                { round: "ROUND 7", title: "Phoenix Season Finale", track: "Phoenix Raceway", date: "NOV 01, 2026", time: "8:00 PM EST", status: "UPCOMING" }
+            ]
+        };
+
+        // RENDER LINEUPS
+        function renderLineups(filter = 'all') {
+            const container = document.getElementById('lineups-container');
+            container.innerHTML = '';
+
+            const filtered = filter === 'all' 
+                ? leagueData.teams 
+                : leagueData.teams.filter(t => t.manufacturer.toLowerCase() === filter.toLowerCase());
+
+            filtered.forEach(team => {
+                let driversHtml = team.drivers.map(d => `
+                    <div class="bg-nascar-dark/70 p-3.5 rounded-xl border border-nascar-border flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <span class="font-racing font-black text-xl text-nascar-yellow w-10">${d.number}</span>
+                            <div>
+                                <div class="font-bold text-white text-base leading-snug">${d.name}</div>
+                                <div class="text-xs text-gray-400">@${d.handle}</div>
+                            </div>
+                        </div>
+                        <span class="text-xs font-racing px-2.5 py-1 rounded bg-white/5 border border-white/10 ${d.status === 'Primary' ? 'text-nascar-yellow' : 'text-gray-400'}">
+                            ${d.status}
+                        </span>
+                    </div>
+                `).join('');
+
+                container.innerHTML += `
+                    <div class="glass-panel rounded-2xl border-t-4 ${team.color} p-6 shadow-xl flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-start mb-4">
+                                <div>
+                                    <span class="text-xs font-racing uppercase tracking-widest text-gray-400">${team.manufacturer}</span>
+                                    <h3 class="font-racing font-black text-2xl text-white uppercase">${team.name}</h3>
+                                </div>
+                                <span class="text-xs font-racing font-bold px-2.5 py-1 rounded ${team.badgeColor} text-white uppercase">${team.manufacturer}</span>
+                            </div>
+                            <div class="text-xs text-gray-400 font-racing mb-6">
+                                <i class="fa-solid fa-user-shield text-nascar-yellow mr-1"></i> Team Owner: <span class="text-white font-bold">@${team.principal}</span>
+                            </div>
+                            <div class="space-y-3">
+                                ${driversHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // RENDER STANDINGS
+        function renderStandings() {
+            document.getElementById('wdc-table-body').innerHTML = leagueData.wdc.map(d => `
+                <tr class="hover:bg-white/5 transition">
+                    <td class="py-4 px-6 font-racing font-black text-lg ${d.pos === 1 ? 'text-nascar-yellow' : 'text-white'}">#${d.pos}</td>
+                    <td class="py-4 px-6 font-bold text-white text-base">${d.driver}</td>
+                    <td class="py-4 px-6 text-gray-400 text-xs">@${d.handle}</td>
+                    <td class="py-4 px-6 text-gray-300">${d.team}</td>
+                    <td class="py-4 px-6 text-center font-racing font-bold text-nascar-yellow">${d.wins}</td>
+                    <td class="py-4 px-6 text-center font-racing text-gray-300">${d.podiums}</td>
+                    <td class="py-4 px-6 text-right font-racing font-black text-white text-lg">${d.points} PTS</td>
+                </tr>
+            `).join('');
+
+            document.getElementById('wcc-table-body').innerHTML = leagueData.wcc.map(t => `
+                <tr class="hover:bg-white/5 transition">
+                    <td class="py-4 px-6 font-racing font-black text-lg ${t.pos === 1 ? 'text-nascar-yellow' : 'text-white'}">#${t.pos}</td>
+                    <td class="py-4 px-6 font-bold text-white text-base">${t.team}</td>
+                    <td class="py-4 px-6 text-gray-400 text-xs">${t.manufacturer}</td>
+                    <td class="py-4 px-6 text-center font-racing font-bold text-nascar-yellow">${t.wins}</td>
+                    <td class="py-4 px-6 text-right font-racing font-black text-white text-lg">${t.points} PTS</td>
+                </tr>
+            `).join('');
+        }
+
+        // RENDER RESULTS
+        function renderResults() {
+            document.getElementById('results-container').innerHTML = leagueData.results.map(r => `
+                <div class="glass-panel rounded-2xl p-6 border border-nascar-border">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between border-b border-nascar-border pb-4 mb-4 gap-2">
+                        <div>
+                            <h3 class="font-racing font-black text-xl text-white uppercase">${r.race}</h3>
+                            <p class="text-xs text-nascar-yellow font-racing"><i class="fa-solid fa-location-dot mr-1"></i> ${r.track} • ${r.date}</p>
+                        </div>
+                        <span class="text-xs font-racing px-3 py-1 bg-green-500/20 text-green-400 border border-green-500/30 rounded-full w-max">Official Verified</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        ${r.podium.map(p => `
+                            <div class="bg-nascar-dark/60 p-4 rounded-xl border border-nascar-border flex items-center justify-between">
+                                <div class="flex items-center space-x-3">
+                                    <span class="font-racing font-black text-lg ${p.pos === 'P1' ? 'text-nascar-yellow' : 'text-gray-400'}">${p.pos}</span>
+                                    <div>
+                                        <div class="font-bold text-white">${p.driver}</div>
+                                        <div class="text-xs text-gray-400">${p.team}</div>
+                                    </div>
+                                </div>
+                                <span class="font-racing text-xs text-gray-400">${p.time}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // RENDER SCHEDULE
+        function renderSchedule() {
+            document.getElementById('schedule-container').innerHTML = leagueData.schedule.map(s => `
+                <div class="glass-panel rounded-2xl p-6 border border-nascar-border flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="text-xs font-racing font-bold text-nascar-yellow uppercase">${s.round}</span>
+                            <span class="text-xs font-racing px-2.5 py-1 bg-nascar-blue/20 text-nascar-blue border border-nascar-blue/30 rounded-full">${s.status}</span>
+                        </div>
+                        <h3 class="font-racing font-black text-xl text-white uppercase mb-1">${s.title}</h3>
+                        <p class="text-xs text-gray-400 font-racing mb-4"><i class="fa-solid fa-road mr-1 text-nascar-yellow"></i> ${s.track}</p>
+                    </div>
+                    <div class="border-t border-nascar-border/60 pt-4 flex justify-between items-center text-xs font-racing text-gray-300">
+                        <span><i class="fa-regular fa-calendar mr-1 text-nascar-yellow"></i> ${s.date}</span>
+                        <span><i class="fa-regular fa-clock mr-1 text-nascar-yellow"></i> ${s.time}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // CONTROLLERS
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`sec-${tabId}`).classList.remove('hidden');
+
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.className = "nav-btn px-4 py-2 rounded-lg text-gray-300 hover:text-white hover:bg-white/5 transition");
+            const activeBtn = document.getElementById(`nav-${tabId}`);
+            if (activeBtn) activeBtn.className = "nav-btn px-4 py-2 rounded-lg text-white bg-white/10 transition";
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleStandings(subTab) {
+            const wdc = document.getElementById('standings-wdc');
+            const wcc = document.getElementById('standings-wcc');
+            const btnWdc = document.getElementById('tab-btn-wdc');
+            const btnWcc = document.getElementById('tab-btn-wcc');
+
+            if (subTab === 'wdc') {
+                wdc.classList.remove('hidden');
+                wcc.classList.add('hidden');
+                btnWdc.className = "px-6 py-2 rounded-lg bg-nascar-yellow text-black font-bold transition";
+                btnWcc.className = "px-6 py-2 rounded-lg text-gray-400 hover:text-white transition";
+            } else {
+                wdc.classList.add('hidden');
+                wcc.classList.remove('hidden');
+                btnWcc.className = "px-6 py-2 rounded-lg bg-nascar-yellow text-black font-bold transition";
+                btnWdc.className = "px-6 py-2 rounded-lg text-gray-400 hover:text-white transition";
+            }
+        }
+
+        function filterLineups(manufacturer, btn) {
+            document.querySelectorAll('.lineup-filter').forEach(b => {
+                b.className = "lineup-filter px-4 py-2 rounded-lg bg-nascar-card border border-nascar-border text-gray-300 hover:text-white";
+            });
+            btn.className = "lineup-filter px-4 py-2 rounded-lg bg-nascar-yellow text-black font-bold";
+            renderLineups(manufacturer);
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        }
+
+        document.getElementById('mobile-menu-btn').addEventListener('click', toggleMobileMenu);
+
+        // INITIALIZE SITE
+        renderLineups();
+        renderStandings();
+        renderResults();
+        renderSchedule();
+    </script>
+</body>
+</html>
