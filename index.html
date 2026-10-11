@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NRCS - Roblox NASCAR Championship Series</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@400;600;700&family=Outfit:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            red: '#E10600',
+                            gold: '#FFB800',
+                            blue: '#0066FF',
+                            dark: '#0B0E14',
+                            card: '#131822',
+                            border: '#212B3B',
+                            accent: '#1E2638'
+                        }
+                    },
+                    fontFamily: {
+                        display: ['Teko', 'sans-serif'],
+                        sans: ['Outfit', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom scrollbar & glassmorphism */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0B0E14;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1E2638;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #E10600;
+        }
+        .carbon-bg {
+            background-color: #0b0e14;
+            background-image: radial-gradient(#1e2638 0.75px, transparent 0.75px), radial-gradient(#1e2638 0.75px, #0b0e14 0.75px);
+            background-size: 30px 30px;
+            background-position: 0 0, 15px 15px;
+        }
+        .glass-panel {
+            background: rgba(19, 24, 34, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glow-red {
+            box-shadow: 0 0 25px rgba(225, 6, 0, 0.35);
+        }
+        .glow-gold {
+            box-shadow: 0 0 25px rgba(255, 184, 0, 0.35);
+        }
+        .clip-slant {
+            clip-path: polygon(12px 0, 100% 0, calc(100% - 12px) 100%, 0 100%);
+        }
+        .clip-badge {
+            clip-path: polygon(0 0, 100% 0, 85% 100%, 0% 100%);
+        }
+        .text-stroke {
+            -webkit-text-stroke: 1px rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body class="carbon-bg text-slate-100 font-sans antialiased min-h-screen flex flex-col selection:bg-brand-red selection:text-white">
+
+    <!-- NAVIGATION BAR -->
+    <header class="sticky top-0 z-50 glass-panel border-b border-brand-border/60">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            
+            <!-- Logo -->
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('home')">
+                <div class="w-11 h-11 bg-gradient-to-tr from-brand-red to-orange-500 rounded-lg flex items-center justify-center font-display font-bold text-2xl tracking-tighter text-white shadow-lg shadow-brand-red/30 italic transform -skew-x-12">
+                    NCS
+                </div>
+                <div class="flex flex-col">
+                    <span class="font-display text-2xl font-bold tracking-wider leading-none uppercase text-white flex items-center gap-1.5">
+                        ROBLOX <span class="text-brand-red italic">NASCAR</span>
+                    </span>
+                    <span class="text-[10px] tracking-widest text-slate-400 font-semibold uppercase">Championship Series</span>
+                </div>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="hidden lg:flex items-center space-x-1 bg-slate-900/60 p-1.5 rounded-xl border border-white/5">
+                <button onclick="switchTab('home')" id="nav-home" class="nav-link active px-4 py-2 rounded-lg text-sm font-semibold tracking-wide transition-all duration-200 text-white bg-brand-red shadow-md">
+                    <i class="fa-solid fa-house mr-1.5 text-xs"></i> HOME
+                </button>
+                <button onclick="switchTab('standings')" id="nav-standings" class="nav-link px-4 py-2 rounded-lg text-sm font-semibold tracking-wide transition-all duration-200 text-slate-300 hover:text-white hover:bg-white/5">
+                    <i class="fa-solid fa-trophy mr-1.5 text-xs text-brand-gold"></i> STANDINGS
+                </button>
+                <button onclick="switchTab('teams')" id="nav-teams" class="nav-link px-4 py-2 rounded-lg text-sm font-semibold tracking-wide transition-all duration-200 text-slate-300 hover:text-white hover:bg-white/5">
+                    <i class="fa-solid fa-users mr-1.5 text-xs text-brand-blue"></i> TEAMS
+                </button>
+                <button onclick="switchTab('calendar')" id="nav-calendar" class="nav-link px-4 py-2 rounded-lg text-sm font-semibold tracking-wide transition-all duration-200 text-slate-300 hover:text-white hover:bg-white/5">
+                    <i class="fa-solid fa-calendar-days mr-1.5 text-xs text-emerald-400"></i> SCHEDULE
+                </button>
+                <button onclick="switchTab('results')" id="nav-results" class="nav-link px-4 py-2 rounded-lg text-sm font-semibold tracking-wide transition-all duration-200 text-slate-300 hover:text-white hover:bg-white/5">
+                    <i class="fa-solid fa-flag-checkered mr-1.5 text-xs text-slate-300"></i> RESULTS
+                </button>
+            </nav>
+
+            <!-- Discord Button CTA -->
+            <div class="hidden sm:flex items-center space-x-3">
+                <a href="https://discord.gg/roblox-nascar" target="_blank" rel="noopener noreferrer" class="relative group bg-indigo-600 hover:bg-indigo-500 text-white font-semibold px-5 py-2.5 rounded-lg text-sm flex items-center gap-2 shadow-lg shadow-indigo-600/30 transition-all duration-300 transform hover:-translate-y-0.5">
+                    <i class="fa-brands fa-discord text-lg"></i>
+                    <span>JOIN DISCORD</span>
+                    <span class="flex h-2 w-2 relative">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                    </span>
+                </a>
+            </div>
+
+            <!-- Mobile menu button -->
+            <button onclick="toggleMobileMenu()" class="lg:hidden p-2 rounded-lg text-slate-400 hover:text-white bg-slate-900/80 border border-white/10">
+                <i class="fa-solid fa-bars text-xl" id="menu-icon"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Drawer -->
+        <div id="mobile-menu" class="hidden lg:hidden border-b border-brand-border bg-brand-dark/95 px-4 pt-2 pb-6 space-y-2">
+            <button onclick="switchTab('home'); toggleMobileMenu();" class="w-full text-left px-4 py-3 rounded-lg text-base font-semibold text-white bg-brand-red/20 border border-brand-red/40 flex items-center gap-3">
+                <i class="fa-solid fa-house text-brand-red"></i> Home
+            </button>
+            <button onclick="switchTab('standings'); toggleMobileMenu();" class="w-full text-left px-4 py-3 rounded-lg text-base font-semibold text-slate-300 hover:bg-white/5 flex items-center gap-3">
+                <i class="fa-solid fa-trophy text-brand-gold"></i> Standings (WDC / WCC)
+            </button>
+            <button onclick="switchTab('teams'); toggleMobileMenu();" class="w-full text-left px-4 py-3 rounded-lg text-base font-semibold text-slate-300 hover:bg-white/5 flex items-center gap-3">
+                <i class="fa-solid fa-users text-brand-blue"></i> Teams & Lineups
+            </button>
+            <button onclick="switchTab('calendar'); toggleMobileMenu();" class="w-full text-left px-4 py-3 rounded-lg text-base font-semibold text-slate-300 hover:bg-white/5 flex items-center gap-3">
+                <i class="fa-solid fa-calendar-days text-emerald-400"></i> Race Schedule
+            </button>
+            <button onclick="switchTab('results'); toggleMobileMenu();" class="w-full text-left px-4 py-3 rounded-lg text-base font-semibold text-slate-300 hover:bg-white/5 flex items-center gap-3">
+                <i class="fa-solid fa-flag-checkered text-slate-300"></i> Race Results
+            </button>
+            <a href="https://discord.gg/roblox-nascar" target="_blank" class="w-full mt-4 bg-indigo-600 text-white font-semibold py-3 rounded-lg text-center flex items-center justify-center gap-2 shadow-lg">
+                <i class="fa-brands fa-discord text-xl"></i> Join Community Discord
+            </a>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- TAB: HOME / DASHBOARD -->
+        <section id="tab-home" class="tab-content space-y-12">
+            
+            <!-- HERO BANNER -->
+            <div class="relative rounded-3xl overflow-hidden glass-panel border border-brand-border p-8 md:p-12 lg:p-16">
+                <!-- Glowing Backdrop Gradients -->
+                <div class="absolute -top-24 -left-24 w-96 h-96 bg-brand-red/20 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="absolute -bottom-24 -right-24 w-96 h-96 bg-brand-blue/20 rounded-full blur-3xl pointer-events-none"></div>
+                
+                <div class="relative z-10 grid lg:grid-cols-12 gap-8 items-center">
+                    <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+                        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-red/10 border border-brand-red/30 text-brand-red text-xs font-bold tracking-widest uppercase">
+                            <i class="fa-solid fa-circle text-[8px] animate-pulse"></i> Season 7 Is Now Live
+                        </div>
+                        
+                        <h1 class="font-display text-5xl sm:text-6xl md:text-7xl font-extrabold uppercase tracking-tight leading-none text-white italic">
+                            ROBLOX <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-red via-orange-500 to-brand-gold">NASCAR</span> CHAMPIONSHIP
+                        </h1>
+
+                        <p class="text-slate-300 text-base md:text-lg max-w-2xl font-light leading-relaxed">
+                            Experience premier virtual stock car racing. 200 MPH bumper-to-bumper action, professional telemetry, official racing teams, and intense competition on Roblox's most legendary ovals.
+                        </p>
+
+                        <div class="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-2">
+                            <button onclick="switchTab('standings')" class="bg-gradient-to-r from-brand-red to-red-700 hover:from-red-600 hover:to-red-800 text-white font-bold px-8 py-3.5 rounded-xl text-base shadow-lg shadow-brand-red/30 transition-all duration-300 flex items-center gap-3 group">
+                                <span>VIEW STANDINGS</span>
+                                <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                            </button>
+                            <a href="https://discord.gg/roblox-nascar" target="_blank" class="bg-slate-800/80 hover:bg-slate-700 text-white font-semibold px-7 py-3.5 rounded-xl text-base border border-slate-700 transition-all duration-300 flex items-center gap-2.5">
+                                <i class="fa-brands fa-discord text-indigo-400 text-lg"></i>
+                                <span>Join League Discord</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Next Race Countdown Card -->
+                    <div class="lg:col-span-5">
+                        <div class="bg-slate-900/90 border border-brand-border/80 rounded-2xl p-6 shadow-2xl relative overflow-hidden backdrop-blur-md">
+                            <div class="absolute top-0 right-0 bg-brand-red text-white text-[10px] font-bold tracking-widest px-3 py-1 rounded-bl-lg uppercase">
+                                NEXT EVENT
+                            </div>
+                            
+                            <span class="text-xs font-bold text-brand-gold tracking-widest uppercase block mb-1">ROUND 5 • SUPERSPEEDWAY</span>
+                            <h3 class="font-display text-3xl font-bold uppercase text-white tracking-wide">DAYTONA 500 VIRTUAL</h3>
+                            <p class="text-slate-400 text-xs mb-6"><i class="fa-solid fa-location-dot text-brand-red mr-1"></i> Daytona International Speedway • 100 Laps</p>
+
+                            <!-- Countdown Timer -->
+                            <div class="grid grid-cols-4 gap-2 text-center my-4" id="countdown-timer">
+                                <div class="bg-slate-800/80 p-3 rounded-xl border border-white/5">
+                                    <span id="days" class="font-display text-3xl font-bold text-white block leading-none">03</span>
+                                    <span class="text-[10px] text-slate-400 font-semibold uppercase">DAYS</span>
+                                </div>
+                                <div class="bg-slate-800/80 p-3 rounded-xl border border-white/5">
+                                    <span id="hours" class="font-display text-3xl font-bold text-white block leading-none">14</span>
+                                    <span class="text-[10px] text-slate-400 font-semibold uppercase">HOURS</span>
+                                </div>
+                                <div class="bg-slate-800/80 p-3 rounded-xl border border-white/5">
+                                    <span id="mins" class="font-display text-3xl font-bold text-white block leading-none">42</span>
+                                    <span class="text-[10px] text-slate-400 font-semibold uppercase">MINS</span>
+                                </div>
+                                <div class="bg-slate-800/80 p-3 rounded-xl border border-white/5">
+                                    <span id="secs" class="font-display text-3xl font-bold text-brand-red block leading-none">18</span>
+                                    <span class="text-[10px] text-slate-400 font-semibold uppercase">SECS</span>
+                                </div>
+                            </div>
+
+                            <div class="mt-6 pt-4 border-t border-slate-800 flex items-center justify-between text-xs text-slate-300">
+                                <span><i class="fa-regular fa-clock text-brand-blue mr-1"></i> Saturday, 8:00 PM EST</span>
+                                <span class="text-emerald-400 font-semibold"><i class="fa-solid fa-video mr-1"></i> Live Streamed</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STATS TICKER -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="glass-panel p-5 rounded-2xl border border-brand-border flex items-center space-x-4">
+                    <div class="w-12 h-12 rounded-xl bg-brand-red/10 border border-brand-red/30 flex items-center justify-center text-brand-red text-xl font-bold">
+                        <i class="fa-solid fa-trophy"></i>
+                    </div>
+                    <div>
+                        <div class="text-xs text-slate-400 font-semibold tracking-wider uppercase">WDC Leader</div>
+                        <div class="font-display text-2xl font-bold text-white tracking-wide">VortexSpeed_RBX</div>
+                    </div>
+                </div>
+
+                <div class="glass-panel p-5 rounded-2xl border border-brand-border flex items-center space-x-4">
+                    <div class="w-12 h-12 rounded-xl bg-brand-gold/10 border border-brand-gold/30 flex items-center justify-center text-brand-gold text-xl font-bold">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <div>
+                        <div class="text-xs text-slate-400 font-semibold tracking-wider uppercase">WCC Leader</div>
+                        <div class="font-display text-2xl font-bold text-white tracking-wide">Hendrick Motorsport</div>
+                    </div>
+                </div>
+
+                <div class="glass-panel p-5 rounded-2xl border border-brand-border flex items-center space-x-4">
+                    <div class="w-12 h-12 rounded-xl bg-brand-blue/10 border border-brand-blue/30 flex items-center justify-center text-brand-blue text-xl font-bold">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+                    <div>
+                        <div class="text-xs text-slate-400 font-semibold tracking-wider uppercase">Active Drivers</div>
+                        <div class="font-display text-2xl font-bold text-white tracking-wide">36 Racers</div>
+                    </div>
+                </div>
+
+                <div class="glass-panel p-5 rounded-2xl border border-brand-border flex items-center space-x-4">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 text-xl font-bold">
+                        <i class="fa-solid fa-flag-checkered"></i>
+                    </div>
+                    <div>
+                        <div class="text-xs text-slate-400 font-semibold tracking-wider uppercase">Races Completed</div>
+                        <div class="font-display text-2xl font-bold text-white tracking-wide">4 / 12 Rounds</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PREVIEW PODIUM & QUICK LINKS GRID -->
+            <div class="grid lg:grid-cols-3 gap-8">
+                <!-- TOP 3 DRIVERS HIGHLIGHT -->
+                <div class="lg:col-span-2 glass-panel rounded-2xl p-6 border border-brand-border space-y-6">
+                    <div class="flex items-center justify-between border-b border-brand-border/60 pb-4">
+                        <div>
+                            <h2 class="font-display text-3xl font-bold uppercase text-white tracking-wide">Championship Leaders</h2>
+                            <p class="text-xs text-slate-400">Current top contender drivers after Round 4</p>
+                        </div>
+                        <button onclick="switchTab('standings')" class="text-xs text-brand-red hover:underline font-bold tracking-wider uppercase">Full Standings <i class="fa-solid fa-chevron-right ml-1"></i></button>
+                    </div>
+
+                    <div id="home-top3-grid" class="grid sm:grid-cols-3 gap-4 pt-2">
+                        <!-- Dynamic Injection -->
+                    </div>
+                </div>
+
+                <!-- DISCORD / COMMUNITY WIDGET -->
+                <div class="glass-panel rounded-2xl p-6 border border-brand-border flex flex-col justify-between space-y-6">
+                    <div>
+                        <div class="flex items-center gap-3 text-indigo-400 mb-2">
+                            <i class="fa-brands fa-discord text-2xl"></i>
+                            <span class="font-display text-2xl font-bold uppercase text-white">JOIN OUR COMMUNITY</span>
+                        </div>
+                        <p class="text-sm text-slate-300 leading-relaxed mb-4">
+                            Get race notifications, submit driver appeals, register custom paint schemes, and chat with 1,200+ active Roblox racers!
+                        </p>
+                        <ul class="space-y-2.5 text-xs text-slate-400 mb-6">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Live Race Telemetry & Voice Channels</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Official Stewards Penalty Reports</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Team Owner Sign-ups & Transfers</li>
+                        </ul>
+                    </div>
+
+                    <a href="https://discord.gg/roblox-nascar" target="_blank" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3.5 px-4 rounded-xl text-center shadow-lg shadow-indigo-600/30 transition-all flex items-center justify-center gap-2 text-sm">
+                        <i class="fa-brands fa-discord text-lg"></i>
+                        <span>JOIN DISCORD SERVER</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB: STANDINGS (WDC & WCC) -->
+        <section id="tab-standings" class="tab-content hidden space-y-8">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-brand-border pb-6">
+                <div>
+                    <h1 class="font-display text-4xl font-extrabold uppercase text-white tracking-wide">LEAGUE STANDINGS</h1>
+                    <p class="text-slate-400 text-sm">Official standings for Season 7 World Drivers' & Constructors' Championship</p>
+                </div>
+
+                <!-- Sub-tab Switcher -->
+                <div class="flex bg-slate-900/90 p-1 rounded-xl border border-brand-border self-start md:self-auto">
+                    <button onclick="switchStandingsSubTab('wdc')" id="subtab-wdc" class="px-6 py-2 rounded-lg text-xs font-bold tracking-wider uppercase transition-all bg-brand-red text-white shadow-md">
+                        DRIVERS (WDC)
+                    </button>
+                    <button onclick="switchStandingsSubTab('wcc')" id="subtab-wcc" class="px-6 py-2 rounded-lg text-xs font-bold tracking-wider uppercase transition-all text-slate-400 hover:text-white">
+                        TEAMS (WCC)
+                    </button>
+                </div>
+            </div>
+
+            <!-- SEARCH AND FILTER BAR -->
+            <div class="flex flex-col sm:flex-row gap-4 justify-between items-center bg-slate-900/50 p-4 rounded-xl border border-brand-border">
+                <div class="relative w-full sm:w-80">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-500 text-xs"></i>
+                    <input type="text" id="standings-search" onkeyup="filterStandings()" placeholder="Search driver or team..." class="w-full bg-slate-950 border border-slate-800 rounded-lg pl-9 pr-4 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-brand-red">
+                </div>
+                <div class="text-xs text-slate-400">
+                    <i class="fa-solid fa-circle-info text-brand-blue mr-1"></i> Points system: 1st=40p, 2nd=35p, 3rd=34p... +1 Bonus Lap Led
+                </div>
+            </div>
+
+            <!-- WDC TABLE SECTION -->
+            <div id="wdc-section" class="space-y-6">
+                <div class="glass-panel rounded-2xl border border-brand-border overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-slate-950/80 text-slate-400 text-[11px] font-bold uppercase tracking-wider border-b border-brand-border">
+                                    <th class="py-4 px-4 text-center w-16">POS</th>
+                                    <th class="py-4 px-6">DRIVER</th>
+                                    <th class="py-4 px-6">TEAM</th>
+                                    <th class="py-4 px-4 text-center">CAR #</th>
+                                    <th class="py-4 px-4 text-center">WINS</th>
+                                    <th class="py-4 px-4 text-center">PODIUMS</th>
+                                    <th class="py-4 px-4 text-center">POLES</th>
+                                    <th class="py-4 px-4 text-center">PTS</th>
+                                    <th class="py-4 px-6 text-center">FORM</th>
+                                </tr>
+                            </thead>
+                            <tbody id="wdc-table-body" class="divide-y divide-brand-border/40 text-sm font-medium">
+                                <!-- Dynamic Injection -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- WCC TABLE SECTION -->
+            <div id="wcc-section" class="hidden space-y-6">
+                <div class="glass-panel rounded-2xl border border-brand-border overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-slate-950/80 text-slate-400 text-[11px] font-bold uppercase tracking-wider border-b border-brand-border">
+                                    <th class="py-4 px-4 text-center w-16">POS</th>
+                                    <th class="py-4 px-6">TEAM</th>
+                                    <th class="py-4 px-6">PRIMARY DRIVERS</th>
+                                    <th class="py-4 px-4 text-center">WINS</th>
+                                    <th class="py-4 px-4 text-center">PODIUMS</th>
+                                    <th class="py-4 px-4 text-center">PTS</th>
+                                </tr>
+                            </thead>
+                            <tbody id="wcc-table-body" class="divide-y divide-brand-border/40 text-sm font-medium">
+                                <!-- Dynamic Injection -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB: TEAMS & LINEUPS -->
+        <section id="tab-teams" class="tab-content hidden space-y-8">
+            <div class="border-b border-brand-border pb-6">
+                <h1 class="font-display text-4xl font-extrabold uppercase text-white tracking-wide">TEAMS & LINEUPS</h1>
+                <p class="text-slate-400 text-sm">Official Season 7 NASCAR Constructor teams, drivers, owners, and car specifications</p>
+            </div>
+
+            <!-- Teams Grid -->
+            <div id="teams-grid" class="grid md:grid-cols-2 lg:grid-cols-2 gap-6">
+                <!-- Dynamic Injection -->
+            </div>
+        </section>
+
+        <!-- TAB: RACE CALENDAR -->
+        <section id="tab-calendar" class="tab-content hidden space-y-8">
+            <div class="border-b border-brand-border pb-6">
+                <h1 class="font-display text-4xl font-extrabold uppercase text-white tracking-wide">SEASON 7 SCHEDULE</h1>
+                <p class="text-slate-400 text-sm">Official 12-Round Roblox NASCAR Championship Calendar</p>
+            </div>
+
+            <!-- Calendar Filter -->
+            <div class="flex gap-2 border-b border-brand-border/50 pb-4">
+                <button onclick="filterCalendar('all')" id="cal-filter-all" class="cal-filter active px-4 py-1.5 rounded-lg text-xs font-bold uppercase bg-brand-red text-white">ALL RACES</button>
+                <button onclick="filterCalendar('upcoming')" id="cal-filter-upcoming" class="cal-filter px-4 py-1.5 rounded-lg text-xs font-bold uppercase bg-slate-800 text-slate-300 hover:text-white">UPCOMING</button>
+                <button onclick="filterCalendar('completed')" id="cal-filter-completed" class="cal-filter px-4 py-1.5 rounded-lg text-xs font-bold uppercase bg-slate-800 text-slate-300 hover:text-white">COMPLETED</button>
+            </div>
+
+            <div id="calendar-grid" class="grid gap-4">
+                <!-- Dynamic Injection -->
+            </div>
+        </section>
+
+        <!-- TAB: RACE RESULTS -->
+        <section id="tab-results" class="tab-content hidden space-y-8">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-brand-border pb-6">
+                <div>
+                    <h1 class="font-display text-4xl font-extrabold uppercase text-white tracking-wide">RACE RESULTS</h1>
+                    <p class="text-slate-400 text-sm">Official classification reports, lap times, and penalties</p>
+                </div>
+
+                <!-- Race Selector Dropdown -->
+                <div class="flex items-center space-x-3">
+                    <label for="race-select" class="text-xs font-bold text-slate-400 uppercase tracking-wider">Select Event:</label>
+                    <select id="race-select" onchange="renderRaceResultDetails(this.value)" class="bg-slate-900 border border-brand-border rounded-xl px-4 py-2 text-xs font-bold text-white focus:outline-none focus:border-brand-red">
+                        <!-- Dynamic Injection -->
+                    </select>
+                </div>
+            </div>
+
+            <!-- Selected Race Card Header -->
+            <div id="result-header-card" class="glass-panel p-6 rounded-2xl border border-brand-border flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <!-- Dynamic Header -->
+            </div>
+
+            <!-- Results Table -->
+            <div class="glass-panel rounded-2xl border border-brand-border overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-950/80 text-slate-400 text-[11px] font-bold uppercase tracking-wider border-b border-brand-border">
+                                <th class="py-4 px-4 text-center w-16">POS</th>
+                                <th class="py-4 px-6">DRIVER</th>
+                                <th class="py-4 px-6">TEAM</th>
+                                <th class="py-4 px-4 text-center">LAPS</th>
+                                <th class="py-4 px-6">TIME / GAP</th>
+                                <th class="py-4 px-4 text-center">BEST LAP</th>
+                                <th class="py-4 px-4 text-center">POINTS</th>
+                                <th class="py-4 px-4 text-center">STATUS</th>
+                            </tr>
+                        </thead>
+                        <tbody id="results-table-body" class="divide-y divide-brand-border/40 text-sm font-medium">
+                            <!-- Dynamic Injection -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-brand-border bg-slate-950 mt-16 py-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 bg-brand-red rounded flex items-center justify-center font-display font-bold text-white italic">NCS</div>
+                <span class="font-display text-xl font-bold tracking-wider text-white">ROBLOX NASCAR CHAMPIONSHIP SERIES</span>
+            </div>
+
+            <p class="text-xs text-slate-500 text-center md:text-left">
+                &copy; 2026 Roblox NASCAR Championship League. Fan-made Roblox league, not affiliated with NASCAR or Roblox Corporation.
+            </p>
+
+            <div class="flex items-center space-x-4">
+                <a href="https://discord.gg/roblox-nascar" target="_blank" class="w-9 h-9 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-white hover:border-indigo-500 transition-colors">
+                    <i class="fa-brands fa-discord"></i>
+                </a>
+                <a href="#" class="w-9 h-9 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-white hover:border-brand-red transition-colors">
+                    <i class="fa-brands fa-youtube"></i>
+                </a>
+                <a href="#" class="w-9 h-9 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-white hover:border-brand-blue transition-colors">
+                    <i class="fa-brands fa-x-twitter"></i>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // LEAGUE DATA MODEL
+        const leagueData = {
+            drivers: [
+                { id: 1, name: "VortexSpeed_RBX", team: "Hendrick Motorsports", carNum: 24, pts: 158, wins: 2, podiums: 3, poles: 1, form: ["P1", "P2", "P1", "P4"] },
+                { id: 2, name: "ApexRacer_99", team: "Joe Gibbs Racing", carNum: 18, pts: 142, wins: 1, podiums: 3, poles: 2, form: ["P3", "P1", "P2", "P8"] },
+                { id: 3, name: "DraftMaster_Tx", team: "Team Penske", carNum: 2, pts: 129, wins: 1, podiums: 2, poles: 0, form: ["P2", "P5", "P6", "P1"] },
+                { id: 4, name: "ShadowShift_7", team: "Trackhouse Racing", carNum: 1, pts: 114, wins: 0, podiums: 2, poles: 1, form: ["P4", "P3", "P3", "P12"] },
+                { id: 5, name: "NitroBurner_RBLX", team: "Stewart-Haas Racing", carNum: 4, pts: 98, wins: 0, podiums: 1, poles: 0, form: ["P8", "P4", "P9", "P3"] },
+                { id: 6, name: "Overdrive_Pro", team: "23XI Racing", carNum: 45, pts: 89, wins: 0, podiums: 0, poles: 0, form: ["P5", "P7", "P8", "P6"] },
+                { id: 7, name: "TurboClutch_99", team: "Hendrick Motorsports", carNum: 9, pts: 84, wins: 0, podiums: 1, poles: 0, form: ["P6", "P12", "P4", "P2"] },
+                { id: 8, name: "SlipStreamer_X", team: "Joe Gibbs Racing", carNum: 11, pts: 72, wins: 0, podiums: 0, poles: 0, form: ["P9", "P8", "P11", "P7"] }
+            ],
+            teams: [
+                { 
+                    id: "hendrick",
+                    name: "Hendrick Motorsports", 
+                    color: "#0055B8", 
+                    pts: 242, 
+                    wins: 2, 
+                    podiums: 4,
+                    principal: "Rick_RBX",
+                    car: "Next-Gen Chevrolet Camaro ZL1",
+                    primaryDrivers: ["VortexSpeed_RBX (#24)", "TurboClutch_99 (#9)"],
+                    reserves: ["SpeedyKid_01 (#48)"]
+                },
+                { 
+                    id: "jgr",
+                    name: "Joe Gibbs Racing", 
+                    color: "#FFB800", 
+                    pts: 214, 
+                    wins: 1, 
+                    podiums: 3,
+                    principal: "CoachGibbs_Roblox",
+                    car: "Next-Gen Toyota Camry TRD",
+                    primaryDrivers: ["ApexRacer_99 (#18)", "SlipStreamer_X (#11)"],
+                    reserves: ["RookieRacer_55 (#20)"]
+                },
+                { 
+                    id: "penske",
+                    name: "Team Penske", 
+                    color: "#E10600", 
+                    pts: 185, 
+                    wins: 1, 
+                    podiums: 2,
+                    principal: "CaptainPenske_V",
+                    car: "Next-Gen Ford Mustang GT",
+                    primaryDrivers: ["DraftMaster_Tx (#2)", "BlaneyFan_77 (#12)"],
+                    reserves: ["Cindric_22 (#33)"]
+                },
+                { 
+                    id: "trackhouse",
+                    name: "Trackhouse Racing", 
+                    color: "#00D26A", 
+                    pts: 156, 
+                    wins: 0, 
+                    podiums: 2,
+                    principal: "MarksRacer_RBX",
+                    car: "Next-Gen Chevrolet Camaro ZL1",
+                    primaryDrivers: ["ShadowShift_7 (#1)", "Suarez_99 (#99)"],
+                    reserves: ["PitCrew_Dave (#91)"]
+                }
+            ],
+            calendar: [
+                { round: 1, track: "Daytona International Speedway", date: "SEP 12, 2026", status: "Completed", laps: 100, winner: "VortexSpeed_RBX", type: "Superspeedway" },
+                { round: 2, track: "Atlanta Motor Speedway", date: "SEP 19, 2026", status: "Completed", laps: 80, winner: "ApexRacer_99", type: "Intermediate" },
+                { round: 3, track: "Talladega Superspeedway", date: "SEP 26, 2026", status: "Completed", laps: 100, winner: "VortexSpeed_RBX", type: "Superspeedway" },
+                { round: 4, track: "Bristol Motor Speedway", date: "OCT 03, 2026", status: "Completed", laps: 150, winner: "DraftMaster_Tx", type: "Short Track" },
+                { round: 5, track: "Charlotte Motor Speedway", date: "OCT 17, 2026", status: "Live Next", laps: 120, winner: "TBD", type: "Quad-Oval" },
+                { round: 6, track: "Pocono Raceway", date: "OCT 24, 2026", status: "Upcoming", laps: 70, winner: "TBD", type: "Tricky Triangle" },
+                { round: 7, track: "Martinsville Speedway", date: "OCT 31, 2026", status: "Upcoming", laps: 200, winner: "TBD", type: "Short Track" }
+            ],
+            raceResults: {
+                4: {
+                    event: "Round 4 - Bristol Short Track Showdown",
+                    track: "Bristol Motor Speedway",
+                    laps: 150,
+                    lapsCompleted: 150,
+                    fastestLap: "ApexRacer_99 (15.204s)",
+                    cautions: 4,
+                    results: [
+                        { pos: 1, driver: "DraftMaster_Tx", team: "Team Penske", laps: 150, time: "38:12.441", bestLap: "15.280", pts: 40, status: "Finished" },
+                        { pos: 2, driver: "TurboClutch_99", team: "Hendrick Motorsports", laps: 150, time: "+0.312", bestLap: "15.310", pts: 35, status: "Finished" },
+                        { pos: 3, driver: "NitroBurner_RBLX", team: "Stewart-Haas Racing", laps: 150, time: "+1.045", bestLap: "15.295", pts: 34, status: "Finished" },
+                        { pos: 4, driver: "VortexSpeed_RBX", team: "Hendrick Motorsports", laps: 150, time: "+1.890", bestLap: "15.220", pts: 33, status: "Finished" },
+                        { pos: 5, driver: "Overdrive_Pro", team: "23XI Racing", laps: 149, time: "+1 Lap", bestLap: "15.410", pts: 32, status: "Finished" },
+                        { pos: 6, driver: "ApexRacer_99", team: "Joe Gibbs Racing", laps: 142, time: "Crash (L142)", bestLap: "15.204", pts: 25, status: "DNF" }
+                    ]
+                },
+                3: {
+                    event: "Round 3 - Talladega 300",
+                    track: "Talladega Superspeedway",
+                    laps: 100,
+                    lapsCompleted: 100,
+                    fastestLap: "ShadowShift_7 (48.112s)",
+                    cautions: 6,
+                    results: [
+                        { pos: 1, driver: "VortexSpeed_RBX", team: "Hendrick Motorsports", laps: 100, time: "1:02:14.210", bestLap: "48.150", pts: 41, status: "Finished" },
+                        { pos: 2, driver: "ApexRacer_99", team: "Joe Gibbs Racing", laps: 100, time: "+0.042", bestLap: "48.200", pts: 35, status: "Finished" },
+                        { pos: 3, driver: "ShadowShift_7", team: "Trackhouse Racing", laps: 100, time: "+0.110", bestLap: "48.112", pts: 34, status: "Finished" },
+                        { pos: 4, driver: "TurboClutch_99", team: "Hendrick Motorsports", laps: 100, time: "+0.280", bestLap: "48.300", pts: 33, status: "Finished" }
+                    ]
+                }
+            }
+        };
+
+        // TAB SWITCHING SYSTEM
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('bg-brand-red', 'text-white', 'shadow-md');
+                link.classList.add('text-slate-300');
+            });
+
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+            const activeNav = document.getElementById(`nav-${tabId}`);
+            if(activeNav) {
+                activeNav.classList.add('bg-brand-red', 'text-white', 'shadow-md');
+                activeNav.classList.remove('text-slate-300');
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        function switchStandingsSubTab(sub) {
+            const wdcBtn = document.getElementById('subtab-wdc');
+            const wccBtn = document.getElementById('subtab-wcc');
+            const wdcSec = document.getElementById('wdc-section');
+            const wccSec = document.getElementById('wcc-section');
+
+            if(sub === 'wdc') {
+                wdcBtn.classList.add('bg-brand-red', 'text-white');
+                wdcBtn.classList.remove('text-slate-400');
+                wccBtn.classList.remove('bg-brand-red', 'text-white');
+                wccBtn.classList.add('text-slate-400');
+                wdcSec.classList.remove('hidden');
+                wccSec.classList.add('hidden');
+            } else {
+                wccBtn.classList.add('bg-brand-red', 'text-white');
+                wccBtn.classList.remove('text-slate-400');
+                wdcBtn.classList.remove('bg-brand-red', 'text-white');
+                wdcBtn.classList.add('text-slate-400');
+                wccSec.classList.remove('hidden');
+                wdcSec.classList.add('hidden');
+            }
+        }
+
+        // POPULATE HOME TOP 3 PODIUM
+        function renderHomeTop3() {
+            const container = document.getElementById('home-top3-grid');
+            const top3 = leagueData.drivers.slice(0, 3);
+            
+            const badges = [
+                { label: "1ST PLACE", color: "from-amber-400 to-yellow-600", text: "text-amber-400", border: "border-amber-500/40" },
+                { label: "2ND PLACE", color: "from-slate-300 to-slate-500", text: "text-slate-300", border: "border-slate-400/40" },
+                { label: "3RD PLACE", color: "from-amber-700 to-amber-900", text: "text-amber-600", border: "border-amber-700/40" }
+            ];
+
+            container.innerHTML = top3.map((driver, idx) => `
+                <div class="bg-slate-900/80 rounded-xl p-4 border ${badges[idx].border} relative overflow-hidden flex flex-col justify-between">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-[10px] font-bold tracking-widest px-2 py-0.5 rounded bg-slate-800 ${badges[idx].text}">
+                            ${badges[idx].label}
+                        </span>
+                        <span class="font-display font-extrabold text-xl text-slate-500">#${driver.carNum}</span>
+                    </div>
+                    <div>
+                        <h4 class="font-display text-2xl font-bold text-white leading-tight">${driver.name}</h4>
+                        <p class="text-xs text-slate-400 mb-3">${driver.team}</p>
+                    </div>
+                    <div class="flex justify-between items-center text-xs pt-2 border-t border-white/5">
+                        <span class="text-slate-400">Points: <strong class="text-white">${driver.pts}</strong></span>
+                        <span class="text-slate-400">Wins: <strong class="text-brand-gold">${driver.wins}</strong></span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // POPULATE WDC TABLE
+        function renderWDCTable() {
+            const tbody = document.getElementById('wdc-table-body');
+            tbody.innerHTML = leagueData.drivers.map((d, index) => {
+                let badgeClass = "text-slate-400";
+                if (index === 0) badgeClass = "text-amber-400 font-bold bg-amber-400/10 px-2 py-1 rounded border border-amber-400/30";
+                else if (index === 1) badgeClass = "text-slate-300 font-bold bg-slate-400/10 px-2 py-1 rounded border border-slate-400/30";
+                else if (index === 2) badgeClass = "text-amber-600 font-bold bg-amber-700/10 px-2 py-1 rounded border border-amber-700/30";
+
+                return `
+                    <tr class="hover:bg-slate-900/60 transition-colors">
+                        <td class="py-4 px-4 text-center">
+                            <span class="${badgeClass}">${index + 1}</span>
+                        </td>
+                        <td class="py-4 px-6 font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-user-ninja text-slate-500 text-xs"></i>
+                            <span>${d.name}</span>
+                        </td>
+                        <td class="py-4 px-6 text-slate-300">${d.team}</td>
+                        <td class="py-4 px-4 text-center font-display font-bold text-base text-brand-gold">#${d.carNum}</td>
+                        <td class="py-4 px-4 text-center text-white font-bold">${d.wins}</td>
+                        <td class="py-4 px-4 text-center text-slate-300">${d.podiums}</td>
+                        <td class="py-4 px-4 text-center text-slate-300">${d.poles}</td>
+                        <td class="py-4 px-4 text-center text-brand-red font-display font-bold text-xl">${d.pts}</td>
+                        <td class="py-4 px-6 text-center">
+                            <div class="flex items-center justify-center gap-1 text-[10px]">
+                                ${d.form.map(f => `<span class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 font-mono">${f}</span>`).join('')}
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // POPULATE WCC TABLE
+        function renderWCCTable() {
+            const tbody = document.getElementById('wcc-table-body');
+            tbody.innerHTML = leagueData.teams.map((t, index) => `
+                <tr class="hover:bg-slate-900/60 transition-colors">
+                    <td class="py-4 px-4 text-center font-bold text-slate-400">${index + 1}</td>
+                    <td class="py-4 px-6 font-bold text-white flex items-center gap-3">
+                        <span class="w-3 h-3 rounded-full" style="background-color: ${t.color}"></span>
+                        <span>${t.name}</span>
+                    </td>
+                    <td class="py-4 px-6 text-slate-300 text-xs">${t.primaryDrivers.join(', ')}</td>
+                    <td class="py-4 px-4 text-center text-white font-bold">${t.wins}</td>
+                    <td class="py-4 px-4 text-center text-slate-300">${t.podiums}</td>
+                    <td class="py-4 px-4 text-center text-brand-red font-display font-bold text-xl">${t.pts}</td>
+                </tr>
+            `).join('');
+        }
+
+        // POPULATE TEAMS CARDS
+        function renderTeams() {
+            const container = document.getElementById('teams-grid');
+            container.innerHTML = leagueData.teams.map(t => `
+                <div class="glass-panel rounded-2xl p-6 border border-brand-border space-y-4 relative overflow-hidden">
+                    <div class="w-2 h-full absolute left-0 top-0" style="background-color: ${t.color}"></div>
+
+                    <div class="flex justify-between items-start pl-2">
+                        <div>
+                            <h3 class="font-display text-3xl font-bold uppercase text-white">${t.name}</h3>
+                            <p class="text-xs text-slate-400">Team Principal: <span class="text-slate-200 font-semibold">${t.principal}</span></p>
+                        </div>
+                        <span class="text-xs font-bold tracking-widest px-3 py-1 rounded bg-slate-800 text-brand-gold border border-brand-border">
+                            ${t.pts} PTS
+                        </span>
+                    </div>
+
+                    <div class="bg-slate-950/60 p-4 rounded-xl border border-white/5 space-y-3">
+                        <div class="text-xs text-slate-400"><i class="fa-solid fa-car text-brand-blue mr-1.5"></i> Model: <strong class="text-white">${t.car}</strong></div>
+                        
+                        <div class="grid sm:grid-cols-2 gap-2 pt-2 border-t border-slate-800">
+                            <div>
+                                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider block mb-1">Primary Racers</span>
+                                ${t.primaryDrivers.map(d => `<div class="text-xs font-semibold text-slate-200 flex items-center gap-1"><i class="fa-solid fa-helm-safety text-brand-red text-[10px]"></i> ${d}</div>`).join('')}
+                            </div>
+                            <div>
+                                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider block mb-1">Reserve Drivers</span>
+                                ${t.reserves.map(r => `<div class="text-xs font-semibold text-slate-400 flex items-center gap-1"><i class="fa-solid fa-user-clock text-slate-500 text-[10px]"></i> ${r}</div>`).join('')}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // POPULATE RACE CALENDAR
+        function renderCalendar(filter = 'all') {
+            const container = document.getElementById('calendar-grid');
+            let races = leagueData.calendar;
+
+            if(filter === 'upcoming') races = races.filter(r => r.status !== 'Completed');
+            if(filter === 'completed') races = races.filter(r => r.status === 'Completed');
+
+            container.innerHTML = races.map(r => {
+                let badgeColor = "bg-slate-800 text-slate-300";
+                if (r.status === 'Completed') badgeColor = "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30";
+                if (r.status === 'Live Next') badgeColor = "bg-brand-red/20 text-brand-red border border-brand-red/30 animate-pulse";
+
+                return `
+                    <div class="glass-panel p-5 rounded-2xl border border-brand-border flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-14 h-14 rounded-xl bg-slate-900 border border-brand-border flex flex-col items-center justify-center font-display">
+                                <span class="text-xs text-slate-400 uppercase font-bold leading-none">RND</span>
+                                <span class="text-2xl font-bold text-white leading-none">${r.round}</span>
+                            </div>
+                            <div>
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span class="text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider ${badgeColor}">${r.status}</span>
+                                    <span class="text-xs text-slate-400"><i class="fa-solid fa-road text-slate-500 mr-1"></i> ${r.type}</span>
+                                </div>
+                                <h3 class="font-display text-2xl font-bold uppercase text-white">${r.track}</h3>
+                                <span class="text-xs text-slate-400"><i class="fa-regular fa-calendar mr-1"></i> ${r.date} • ${r.laps} Laps</span>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-3 w-full md:w-auto justify-end">
+                            ${r.winner !== 'TBD' ? `
+                                <div class="text-right">
+                                    <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Winner</span>
+                                    <span class="text-sm font-bold text-brand-gold flex items-center gap-1"><i class="fa-solid fa-trophy text-xs"></i> ${r.winner}</span>
+                                </div>
+                            ` : `
+                                <button onclick="switchTab('calendar')" class="bg-slate-800 hover:bg-slate-700 text-xs font-bold text-white px-4 py-2 rounded-lg border border-slate-700">
+                                    Race Info
+                                </button>
+                            `}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function filterCalendar(type) {
+            document.querySelectorAll('.cal-filter').forEach(btn => {
+                btn.classList.remove('bg-brand-red', 'text-white');
+                btn.classList.add('bg-slate-800', 'text-slate-300');
+            });
+            document.getElementById(`cal-filter-${type}`).classList.add('bg-brand-red', 'text-white');
+            renderCalendar(type);
+        }
+
+        // POPULATE RACE RESULTS
+        function initRaceResultsSelect() {
+            const select = document.getElementById('race-select');
+            select.innerHTML = Object.keys(leagueData.raceResults).map(rnd => `
+                <option value="${rnd}">Round ${rnd} - ${leagueData.raceResults[rnd].track}</option>
+            `).join('');
+            renderRaceResultDetails(4); // Default Round 4
+        }
+
+        function renderRaceResultDetails(roundId) {
+            const race = leagueData.raceResults[roundId];
+            if (!race) return;
+
+            // Header info
+            document.getElementById('result-header-card').innerHTML = `
+                <div>
+                    <span class="text-xs font-bold text-brand-red tracking-widest uppercase block mb-1">OFFICIAL CLASSIFICATION</span>
+                    <h2 class="font-display text-3xl font-bold uppercase text-white">${race.event}</h2>
+                    <p class="text-xs text-slate-400"><i class="fa-solid fa-location-dot text-brand-blue mr-1"></i> ${race.track} • ${race.laps} Laps</p>
+                </div>
+                <div class="flex gap-4 text-xs">
+                    <div class="bg-slate-900 p-3 rounded-xl border border-white/5">
+                        <span class="text-slate-500 uppercase block font-bold text-[10px]">Fastest Lap</span>
+                        <span class="text-brand-gold font-bold">${race.fastestLap}</span>
+                    </div>
+                    <div class="bg-slate-900 p-3 rounded-xl border border-white/5">
+                        <span class="text-slate-500 uppercase block font-bold text-[10px]">Cautions</span>
+                        <span class="text-white font-bold">${race.cautions} Flags</span>
+                    </div>
+                </div>
+            `;
+
+            // Table rows
+            const tbody = document.getElementById('results-table-body');
+            tbody.innerHTML = race.results.map(res => `
+                <tr class="hover:bg-slate-900/60 transition-colors">
+                    <td class="py-4 px-4 text-center font-bold ${res.pos === 1 ? 'text-brand-gold' : 'text-slate-400'}">${res.pos}</td>
+                    <td class="py-4 px-6 font-bold text-white">${res.driver}</td>
+                    <td class="py-4 px-6 text-slate-300 text-xs">${res.team}</td>
+                    <td class="py-4 px-4 text-center text-slate-300">${res.laps}</td>
+                    <td class="py-4 px-6 text-slate-300 text-xs font-mono">${res.time}</td>
+                    <td class="py-4 px-4 text-center text-slate-400 text-xs font-mono">${res.bestLap}s</td>
+                    <td class="py-4 px-4 text-center text-brand-red font-display font-bold text-lg">+${res.pts}</td>
+                    <td class="py-4 px-4 text-center">
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase ${res.status === 'Finished' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-red-500/10 text-red-400'}">
+                            ${res.status}
+                        </span>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // SEARCH FILTER FOR STANDINGS
+        function filterStandings() {
+            const query = document.getElementById('standings-search').value.toLowerCase();
+            const rows = document.querySelectorAll('#wdc-table-body tr');
+            
+            rows.forEach(row => {
+                const text = row.innerText.toLowerCase();
+                row.style.display = text.includes(query) ? '' : 'none';
+            });
+        }
+
+        // INITIALIZATION
+        window.onload = function() {
+            renderHomeTop3();
+            renderWDCTable();
+            renderWCCTable();
+            renderTeams();
+            renderCalendar();
+            initRaceResultsSelect();
+        };
+    </script>
+</body>
+</html>
